@@ -6,15 +6,18 @@ import java.util.Random;
 
 public class apiRequests {
     public static void main(String[] args) {
-        String newsSections = getNewsSections();
-        String newSection = setANewsSectionString(newsSections);
-        System.out.println(newSection);
-    }
-
-    public static String getNewsSections() {
         try {
             HttpClient client = HttpClient.newHttpClient();
+            String newsSections = getNewsSections(client);
+            String newSection = setANewsSectionString(newsSections);
+            System.out.println(newSection);    
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
+    public static String getNewsSections(HttpClient client) {
+        try {
             HttpRequest request = HttpRequest.newBuilder()
                 .uri(new URI("https://ok.surf/api/v1/news-section-names"))
                 .GET()
