@@ -9,8 +9,9 @@ public class apiRequests {
         try {
             HttpClient client = HttpClient.newHttpClient();
             String newsSections = getNewsSections(client);
-            String newSection = setANewsSectionString(newsSections);
-            System.out.println(newSection);    
+            String newsSection = setANewsSectionString(newsSections);
+            String news = getNews(client, newsSection);
+            System.out.println(news);    
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -42,5 +43,25 @@ public class apiRequests {
         String trimmedSectionName = sectionName.substring(1, sectionName.length() - 1);
 
         return trimmedSectionName;
+    }
+
+    public static String getNews(HttpClient client, String newsSection) {
+        String data = "{\"sections\":[\"" + newsSection + "\"]}";
+
+        try {
+            HttpRequest request = HttpRequest.newBuilder()
+                .uri(new URI("https://ok.surf/api/v1/news-section"))
+                .header("Content-Type", "application/json")
+                .POST(HttpRequest.BodyPublishers.ofString(data))
+                .build();
+
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+            String responseBody = response.body();
+            return responseBody;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "";
+        }
     }
 }
