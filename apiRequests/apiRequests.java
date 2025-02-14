@@ -6,11 +6,12 @@ import java.util.Random;
 
 public class apiRequests {
     public static void main(String[] args) {
-        String newSection = getNewsSection();
+        String newsSections = getNewsSections();
+        String newSection = setANewsSectionString(newsSections);
         System.out.println(newSection);
     }
 
-    public static String getNewsSection() {
+    public static String getNewsSections() {
         try {
             HttpClient client = HttpClient.newHttpClient();
 
@@ -21,18 +22,22 @@ public class apiRequests {
 
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
             String responseBody = response.body();
-            String[] trimmedResponseBody = responseBody.substring(1, responseBody.length() - 2).split(",");
-
-            Random random = new Random();
-            int index = random.nextInt(trimmedResponseBody.length);
-
-            String sectionName = trimmedResponseBody[index];
-            String trimmedSectionName = sectionName.substring(1, sectionName.length() - 1);
-
-            return trimmedSectionName;
+            return responseBody;
         } catch (Exception e) {
             e.printStackTrace();
             return "";
         }
+    }
+
+    public static String setANewsSectionString(String responseBody) {
+        String[] trimmedResponseBody = responseBody.substring(1, responseBody.length() - 2).split(",");
+
+        Random random = new Random();
+        int index = random.nextInt(trimmedResponseBody.length);
+
+        String sectionName = trimmedResponseBody[index];
+        String trimmedSectionName = sectionName.substring(1, sectionName.length() - 1);
+
+        return trimmedSectionName;
     }
 }
